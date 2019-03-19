@@ -15,27 +15,47 @@ UTankAimingComponent1::UTankAimingComponent1()
 
 
 
-void UTankAimingComponent1::AimAt(FVector HitLocation)
+void UTankAimingComponent1::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	auto OurTankName = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("%s aiming at  %s"), *OurTankName, *HitLocation.ToString());
+	if (!Barrel) { return; }
+
+	FVector OutLaunchVelocity(0);
+	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
+	//Calclulate The OutLaunch velocity
+	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(
+		this,
+		OutLaunchVelocity,
+		StartLocation,
+		HitLocation,
+		LaunchSpeed,
+		ESuggestProjVelocityTraceOption::DoNotTrace
+
+	);
+		
+	if(bHaveAimSolution)
+	{
+		//Get The Unit Vector
+		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		auto TankName = GetOwner()->GetName();
+		UE_LOG(LogTemp, Warning, TEXT("%s is Aiming at  %s"),*TankName ,*AimDirection.ToString());
+		MoveBarrelTowards(AimDirection);
+	}
 }
 
-// Called when the game starts
-void UTankAimingComponent1::BeginPlay()
+void UTankAimingComponent1::Setbarrelreference(UStaticMeshComponent * BarrelToSet)
 {
-	Super::BeginPlay();
-
-	// ...
-	
+	this->Barrel = BarrelToSet;
 }
+void UTankAimingComponent1::MoveBarrelTowards(FVector AimDirection)
 
-
-// Called every frame
-void UTankAimingComponent1::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	//Work ou differnce between Current Barrel Rotation and AimRotation
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator : %s"), *DeltaRotator.ToString());
 
-	// ...
+	//Move the barrel in the righht amount this frame
+	//Given a max elevation speed and frame rate
 }
 
