@@ -2,18 +2,19 @@
 
 #include "TankPlayerController.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
+
 void ATankPlayerController::BeginPlay()
 {
 Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Playercontroller beginplay"));
+//	UE_LOG(LogTemp, Warning, TEXT("Playercontroller beginplay"));
 	auto possessed = GetControlledTanK();
 	if (!possessed)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NO tank found"));
+		//UE_LOG(LogTemp, Warning, TEXT("NO tank found"));
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Possessed Tank is %s"),*possessed->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("Possessed Tank is %s"),*possessed->GetName());
 	}
 	
 }
