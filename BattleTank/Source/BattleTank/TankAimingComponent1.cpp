@@ -56,7 +56,13 @@ void UTankAimingComponent1::AimAt(FVector HitLocation, float LaunchSpeed)
 
 void UTankAimingComponent1::Setbarrelreference(UTankBarrel * BarrelToSet)
 {
+	if (!BarrelToSet) { return; }
 	this->Barrel = BarrelToSet;
+}
+void UTankAimingComponent1::SetTurretreference(UTankTurret * TurretToSet)
+{
+	if (!TurretToSet) { return; }
+	this->Turret = TurretToSet;
 }
 void UTankAimingComponent1::MoveBarrelTowards(FVector AimDirection)
 

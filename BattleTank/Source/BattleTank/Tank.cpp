@@ -23,6 +23,11 @@ void ATank::Setbarrelreference(UTankBarrel * BarrelToSet)
 	TankAimingComponent->Setbarrelreference(BarrelToSet);
 }
 
+void ATank::SetTurretreference(UTankTurret * TurretToSet)
+{
+	TankAimingComponent->SetTurretreference(TurretToSet);
+}
+
 
 
 // Called to bind functionality to input
