@@ -2,6 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
+#include "Tank.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -10,6 +11,7 @@ Super::BeginPlay();
 	auto possessed = GetControlledTanK();
 	if (!possessed)
 	{
+	
 		//UE_LOG(LogTemp, Warning, TEXT("NO tank found"));
 	}
 	else

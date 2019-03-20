@@ -30,6 +30,9 @@ void UTankAimingComponent1::AimAt(FVector HitLocation, float LaunchSpeed)
 		StartLocation,
 		HitLocation,
 		LaunchSpeed,
+		false,
+		0,
+		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 
 	);
@@ -41,6 +44,13 @@ void UTankAimingComponent1::AimAt(FVector HitLocation, float LaunchSpeed)
 		auto TankName = GetOwner()->GetName();
 		//UE_LOG(LogTemp, Warning, TEXT("%s is Aiming at  %s"),*TankName ,*AimDirection.ToString());
 		MoveBarrelTowards(AimDirection);
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: Aim Solution Found"), Time);
+	}
+	else
+	{
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: No Solution Found"),Time);
 	}
 }
 
@@ -55,6 +65,6 @@ void UTankAimingComponent1::MoveBarrelTowards(FVector AimDirection)
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
-	Barrel->Elevate(5);
+	Barrel->Elevate(DeltaRotator.Pitch);
 }
 
