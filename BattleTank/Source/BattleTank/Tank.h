@@ -8,6 +8,7 @@
 
 class UTankBarrel;
 class UTankAimingComponent1;
+class UTankMovementComponent;
 class UTankTurret;
 class AProjectile;
 
@@ -27,6 +28,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void Fire();
+
+	
 private:
 	// Sets default values for this pawn's properties
 	ATank();
@@ -54,4 +57,5 @@ private:
 
 protected:
 	UTankAimingComponent1* TankAimingComponent = nullptr;
+
 };
