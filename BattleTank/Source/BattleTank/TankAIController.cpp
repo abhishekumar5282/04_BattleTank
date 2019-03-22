@@ -3,6 +3,7 @@
 
 #include "TankAIController.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
+#include "Runtime/AIModule/Classes/AIController.h"
 #include "Tank.h"
 
 void ATankAIController::BeginPlay()
@@ -19,6 +20,9 @@ void ATankAIController::Tick(float DeltaTime)
 	FVector HitLocation = PlayerTank->GetActorLocation();
 	if (PlayerTank)
 	{
+		//Move towards the actor
+		MoveToActor(PlayerTank,AcceptanceRadius);
+
 		ControlledTank->AimAt(HitLocation);
 		//Fire
 		ControlledTank->Fire();
