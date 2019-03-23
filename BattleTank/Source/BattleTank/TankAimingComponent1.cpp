@@ -4,6 +4,7 @@
 #include "BattleTank.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Projectile.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent1::UTankAimingComponent1()
@@ -15,9 +16,13 @@ UTankAimingComponent1::UTankAimingComponent1()
 	// ...
 }
 
+void UTankAimingComponent1::Initialise(UTankTurret * TurretToSet, UTankBarrel * BarrelToSet)
+{
+	Turret = TurretToSet;
+	Barrel = BarrelToSet;
+}
 
-
-void UTankAimingComponent1::AimAt(FVector HitLocation, float LaunchSpeed)
+void UTankAimingComponent1::AimAt(FVector HitLocation)
 {
 	if (!Barrel) { return; }
 
@@ -54,19 +59,10 @@ void UTankAimingComponent1::AimAt(FVector HitLocation, float LaunchSpeed)
 	}
 }
 
-void UTankAimingComponent1::Setbarrelreference(UTankBarrel * BarrelToSet)
-{
-	if (!BarrelToSet) { return; }
-	this->Barrel = BarrelToSet;
-}
-void UTankAimingComponent1::SetTurretreference(UTankTurret * TurretToSet)
-{
-	if (!TurretToSet) { return; }
-	this->Turret = TurretToSet;
-}
 void UTankAimingComponent1::MoveBarrelTowards(FVector AimDirection)
 
 {
+	if (!Barrel || !Turret) { return; }
 	//Work out differnce between Current Barrel Rotation and AimRotation
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
@@ -74,4 +70,25 @@ void UTankAimingComponent1::MoveBarrelTowards(FVector AimDirection)
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Rotate(DeltaRotator.Yaw);
 }
+void UTankAimingComponent1::Fire()
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Tank Fired"));
 
+	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeinSeconds;
+	if (!Barrel && !ProjectileBlueprint)
+	{
+		return;
+	}
+	else if (Barrel && isReloaded)
+	{
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
+			ProjectileBlueprint,
+			Barrel->GetSocketLocation(FName("Projectile")),
+			Barrel->GetSocketRotation(FName("Projectile"))
+			);
+		Projectile->Launch(LaunchSpeed);
+
+		//bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeinSeconds;
+		LastFireTime = FPlatformTime::Seconds();
+	}
+}
