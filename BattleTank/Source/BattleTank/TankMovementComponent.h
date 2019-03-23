@@ -26,9 +26,6 @@ public:
 		UFUNCTION(BlueprintCallable, Category = Setup)
 		void TurnRight(float Throw);
 
-		UFUNCTION(BlueprintCallable, Category = Setup)
-		void TurnLeft(float Throw);
-
 		virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 
 
